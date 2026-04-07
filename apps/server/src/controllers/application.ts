@@ -15,7 +15,7 @@ export class ApplicationController {
 
   update = async (req: AuthRequest, res: Response) => {
     const app = await Application.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
+      returnDocument: "after",
     });
     res.json(app);
   };
