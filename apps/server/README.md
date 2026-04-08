@@ -3,6 +3,12 @@ Job Tracker - Server
 
 Backend part of the Job Tracker application.
 
+Few decision
+------------
+
+-	Used Groq due to its free tier access to openai models
+-	Using class based controllers for better code structure
+
 Usage
 -----
 

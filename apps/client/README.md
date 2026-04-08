@@ -3,6 +3,12 @@ Job Tracker - Client
 
 Frontend part of the Job Tracker application.
 
+Few decision
+------------
+
+-	Used tanstack Libraries for better routing and state management
+-	Used DnD Kit for drag and drop due to its simplicity and performance
+
 Usage
 -----
 
