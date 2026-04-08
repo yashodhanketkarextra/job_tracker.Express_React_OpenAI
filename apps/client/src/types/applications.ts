@@ -18,6 +18,7 @@ export interface IApplication {
   dateApplied: Date;
   status: Status;
   salaryRange?: string;
+  skills?: string[];
 }
 
 export interface IUser {

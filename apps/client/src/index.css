@@ -8,7 +8,15 @@ html {
   box-sizing: border-box;
 }
 
-/* body { */
-/*   background-color: var(--color-zinc-800); */
-/*   color: var(--color-zinc-200); */
-/* } */
+button {
+  padding: 0.5rem;
+  background-color: var(--color-zinc-800);
+  color: var(--color-zinc-100);
+  border-radius: 0.25rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--color-zinc-700);
+  }
+}

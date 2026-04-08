@@ -1,15 +1,11 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import "@/index.css";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider } from "@tanstack/react-router";
-import { router } from "@/routes";
-import "@/index.css";
-import { useAuthStore } from "./store/auth";
-import { setAuthHeader } from "./api/client";
-// import App from "@/App.tsx";
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
 
-const token = useAuthStore.getState().token;
-setAuthHeader(token);
+import { router } from "@/routes";
 
 const queryClient = new QueryClient();
 

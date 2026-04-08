@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import { setAuthHeader } from "@/api/client";
 
 interface IAuthState {
