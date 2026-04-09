@@ -7,8 +7,9 @@ import {
 
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import LoginPage from "@/pages/auth/login";
+import RegisterPage from "@/pages/auth/register";
 import BoardPage from "@/pages/board";
-import LoginPage from "@/pages/login";
 
 const rootRoute = createRootRoute({
   shellComponent: RootDocument,
@@ -18,6 +19,16 @@ const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
   component: LoginPage,
+  beforeLoad: () => {
+    const token = localStorage.getItem("token");
+    if (token) throw redirect({ to: "/board" });
+  },
+});
+
+const registerRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/register",
+  component: RegisterPage,
   beforeLoad: () => {
     const token = localStorage.getItem("token");
     if (token) throw redirect({ to: "/board" });
@@ -35,7 +46,7 @@ const boardRoute = createRoute({
 });
 
 export const router = createRouter({
-  routeTree: rootRoute.addChildren([loginRoute, boardRoute]),
+  routeTree: rootRoute.addChildren([loginRoute, registerRoute, boardRoute]),
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
