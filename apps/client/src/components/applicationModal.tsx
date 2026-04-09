@@ -13,9 +13,16 @@ import { InputField } from "./inputfield";
 interface ApplicationModalProps {
   onClose: () => void;
   close: () => void;
+  update?: boolean;
+  defaultValues?: Partial<IApplication>;
 }
 
-export const ApplicationModal = ({ onClose, close }: ApplicationModalProps) => {
+export const ApplicationModal = ({
+  onClose,
+  close,
+  update,
+  defaultValues,
+}: ApplicationModalProps) => {
   const queryClient = useQueryClient();
   const {
     register,
@@ -31,6 +38,7 @@ export const ApplicationModal = ({ onClose, close }: ApplicationModalProps) => {
       notes: "",
       status: "Applied",
       skills: [],
+      ...defaultValues,
     },
   });
 
@@ -44,10 +52,11 @@ export const ApplicationModal = ({ onClose, close }: ApplicationModalProps) => {
   };
 
   const onSubmit: SubmitHandler<IApplication> = async (data) => {
-    await api.post("/apps", {
-      ...data,
-      dateApplied: new Date(),
-    });
+    if (update && defaultValues?._id) {
+      await api.put(`/apps/${defaultValues?._id}`, { ...data });
+    } else {
+      await api.post("/apps", { ...data, dateApplied: new Date() });
+    }
 
     queryClient.invalidateQueries({ queryKey: ["apps"] });
     onClose();
@@ -58,7 +67,7 @@ export const ApplicationModal = ({ onClose, close }: ApplicationModalProps) => {
       <p className="p-2 font-bold text-lg">Add application</p>
       <div className="w-full p-2">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <AISection onFill={handleFill} />
+          {!update && <AISection onFill={handleFill} />}
           <InputField
             label="company"
             name="company"
@@ -91,9 +100,16 @@ export const ApplicationModal = ({ onClose, close }: ApplicationModalProps) => {
             register={register}
             errors={errors}
           />
+          <InputField
+            label="Salary Range"
+            name="salaryRange"
+            type="text"
+            register={register}
+            errors={errors}
+          />
           <div className="flex flex-col md:flex-row gap-2">
             <button className="w-full" type="submit">
-              Save
+              {update ? "Update" : "Save"}
             </button>
             <button className="w-full" type="button" onClick={close}>
               Close

@@ -8,6 +8,7 @@ Few decision
 
 -	Used tanstack Libraries for better routing and state management
 -	Used DnD Kit for drag and drop due to its simplicity and performance
+-	Some of code is not converted to reusable component to keep integrity and to avoid use of `any`
 
 Usage
 -----
