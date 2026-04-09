@@ -1,20 +1,21 @@
-import { useQueryClient } from "@tanstack/react-query";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 
-import { api } from "@/api/client";
 import { AISection } from "@/features/ai/aiSection";
 import { ResumeSuggestions } from "@/features/ai/aiSuggestion";
+import { useApps } from "@/store/query";
 import type { IAiParseResponse } from "@/types/ai";
 import type { IApplication } from "@/types/applications";
 
 import { InputField } from "./inputfield";
 
+type AppData = Partial<IApplication>;
+
 interface ApplicationModalProps {
   onClose: () => void;
   close: () => void;
   update?: boolean;
-  defaultValues?: Partial<IApplication>;
+  defaultValues?: AppData;
 }
 
 export const ApplicationModal = ({
@@ -23,7 +24,6 @@ export const ApplicationModal = ({
   update,
   defaultValues,
 }: ApplicationModalProps) => {
-  const queryClient = useQueryClient();
   const {
     register,
     control,
@@ -42,6 +42,7 @@ export const ApplicationModal = ({
     },
   });
 
+  const { updateAppMutation, createAppMutation } = useApps();
   const role = useWatch({ control, name: "role" });
   const skills = useWatch({ control, name: "skills" }) || [];
 
@@ -53,13 +54,12 @@ export const ApplicationModal = ({
 
   const onSubmit: SubmitHandler<IApplication> = async (data) => {
     if (update && defaultValues?._id) {
-      await api.put(`/apps/${defaultValues?._id}`, { ...data });
+      updateAppMutation.mutate({ id: defaultValues?._id, payload: data });
+      onClose();
     } else {
-      await api.post("/apps", { ...data, dateApplied: new Date() });
+      createAppMutation.mutate({ payload: data });
+      onClose();
     }
-
-    queryClient.invalidateQueries({ queryKey: ["apps"] });
-    onClose();
   };
 
   return (

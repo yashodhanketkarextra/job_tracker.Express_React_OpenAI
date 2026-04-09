@@ -3,14 +3,14 @@ import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { AiOutlineUserAdd } from "react-icons/ai";
 
-import { api } from "@/api/client";
 import { InputField } from "@/components/inputfield";
+import type { IAuthForm } from "@/features/auth";
+import { AuthFooter, authSchema } from "@/features/auth";
+import { useAuth } from "@/store/query";
 
-import type { IAuthForm } from "./common";
-import { AuthFooter, authSchema } from "./common";
-
-const LoginPage = () => {
+const RegisterPage = () => {
   const {
     register,
     handleSubmit,
@@ -22,11 +22,11 @@ const LoginPage = () => {
 
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { useRegisterMutation } = useAuth();
 
   const onSubmit: SubmitHandler<IAuthForm> = async (data) => {
-    const res = await api.post("/auth/register", { ...data });
-    if (res.status !== 200) setError("Failed to register");
-    navigate({ to: "/" });
+    useRegisterMutation.mutate(data);
+    if (useRegisterMutation.status) setError("Failed to register");
   };
 
   return (
@@ -53,8 +53,11 @@ const LoginPage = () => {
           errors={errors}
           required
         />
-        <button type="submit" className="w-full p-2 rounded shadow">
-          Register
+        <button
+          type="submit"
+          className="w-full p-2 rounded shadow inline-flex justify-center items-center gap-2"
+        >
+          <AiOutlineUserAdd /> Register
         </button>
         {!!error && <p className="text-red-500 p-1 text-center">{error}</p>}
         <AuthFooter navigate={navigate} link="/" name="login" />
@@ -63,4 +66,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -6,30 +6,16 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { useQuery } from "@tanstack/react-query";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { fetchApps } from "@/features/application/api";
-import { updateAppStatus } from "@/features/application/api";
 import { Column } from "@/features/application/column";
+import { useApps } from "@/store/query";
 import { type Status, statuses } from "@/types/applications";
 
 import { CreateApplication } from "./create";
 
 const BoardPage = () => {
-  const queryClient = useQueryClient();
-  const { data = [], isLoading } = useQuery({
-    queryKey: ["apps"],
-    queryFn: fetchApps,
-  });
-
-  const mutation = useMutation({
-    mutationFn: ({ id, status }: { id: string; status: Status }) =>
-      updateAppStatus(id, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["apps"] });
-    },
-  });
+  const { getAppsQuery, updateStatusMutation } = useApps();
+  const { data = [], isLoading } = getAppsQuery;
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -38,7 +24,7 @@ const BoardPage = () => {
     const oldStatus = active?.data?.current?.status;
     if (oldStatus && oldStatus === newStatus) return;
 
-    mutation.mutate({ id: appId, status: newStatus });
+    updateStatusMutation.mutate({ id: appId, status: newStatus });
   };
 
   const sensor = useSensors(

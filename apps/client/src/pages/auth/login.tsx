@@ -1,15 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@tanstack/react-router";
+import type { AxiosError } from "axios";
 import { useState } from "react";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { AiOutlineUser } from "react-icons/ai";
 
-import { api } from "@/api/client";
 import { InputField } from "@/components/inputfield";
-import { useAuthStore } from "@/store/auth";
-
-import type { IAuthForm } from "./common";
-import { AuthFooter, authSchema } from "./common";
+import type { IAuthForm } from "@/features/auth";
+import { AuthFooter, authSchema } from "@/features/auth";
+import { useAuth } from "@/store/query";
 
 const LoginPage = () => {
   const {
@@ -22,24 +22,17 @@ const LoginPage = () => {
   });
 
   const [error, setError] = useState("");
-  const setToken = useAuthStore((s) => s.setToken);
   const navigate = useNavigate();
+  const { useLoginMutation } = useAuth();
 
   const onSubmit: SubmitHandler<IAuthForm> = async (data) => {
-    try {
-      const res = await api.post("/auth/login", { ...data });
-      if (res.status !== 200) {
-        setError(res.data.message || "Failed to login");
-        return;
-      }
-      setToken(res.data.token);
-      navigate({ to: "/board" });
-    } catch (err) {
-      setError("Failed to login");
+    useLoginMutation.mutate(data);
+    if (useLoginMutation.isError) {
+      const err = (useLoginMutation.error as AxiosError)?.response?.data;
+
+      setError((err as any)?.message || "Failed to login");
     }
   };
-
-  console.log({ error });
 
   return (
     <div className="shadow w-11/12 lg:w-1/3 p-6 rounded-xl mx-auto mt-[25%] lg:translate-y-[-50%] shadow  bg-zinc-100">
@@ -65,8 +58,11 @@ const LoginPage = () => {
           errors={errors}
           required
         />
-        <button type="submit" className="w-full p-2 rounded shadow">
-          Login
+        <button
+          type="submit"
+          className="w-full p-2 rounded shadow inline-flex justify-center items-center gap-2"
+        >
+          <AiOutlineUser /> Login
         </button>
         {!!error && <p className="text-red-500 p-1 text-center">{error}</p>}
         <AuthFooter navigate={navigate} link="/register" name="register" />

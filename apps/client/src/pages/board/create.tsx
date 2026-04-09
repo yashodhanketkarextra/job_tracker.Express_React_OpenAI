@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { AiOutlinePlus } from "react-icons/ai";
 
 import { ApplicationModal } from "@/components/applicationModal";
 
@@ -34,10 +35,11 @@ export const CreateApplication = () => {
         </dialog>
       ) : (
         <button
-          className="text-lg w-12 aspect-square fixed right-[1vw] bottom-[6vh]"
+          title="Create new application"
+          className="text-lg w-12 aspect-square fixed right-[1vw] bottom-[6vh] inline-flex justify-center items-center gap-2"
           onClick={open}
         >
-          +
+          <AiOutlinePlus />
         </button>
       )}
     </>

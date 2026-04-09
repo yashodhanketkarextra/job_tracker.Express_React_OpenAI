@@ -1,4 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
+import { AiOutlineLogout } from "react-icons/ai";
 
 import { useAuthStore } from "@/store/auth";
 
@@ -17,9 +18,12 @@ export const Header = () => {
       {!!localStorage.getItem("token") && (
         <button
           type="button"
+          title="logout"
           onClick={handleLogout}
-          className="text-white bg-red-500! rounded-lg p-2 font-bold hover:bg-red-600!"
+          className="text-white bg-red-500! rounded-lg p-2 font-bold hover:bg-red-600!
+          inline-flex justify-center items-center gap-2"
         >
+          <AiOutlineLogout />
           Logout
         </button>
       )}

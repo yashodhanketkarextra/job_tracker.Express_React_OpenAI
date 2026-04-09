@@ -44,14 +44,24 @@ export const generateResumeBulletes = async (
     model: "openai/gpt-oss-120b",
     messages: [
       {
-        role: "user",
-        content: "Generate resume bullet points tailored to role",
+        role: "system",
+        content:
+          "You are a plain text generator. No JSON. No markdown. No headers. Just the bullet points.",
       },
       {
         role: "user",
-        content: `Role: ${role}, skills: ${skills.join(",")}`,
+        content: `Generate 3-5 short, professional resume bullet points for:
+      Role: ${role}
+      Skills: ${skills.join(", ")}
+
+      Output rules:
+      - One bullet point per line
+      - No JSON formatting
+      - No symbols or dots at the start
+      - Just the sentences`,
       },
     ],
+    temperature: 0.2,
   });
 
   return res.choices[0].message.content;

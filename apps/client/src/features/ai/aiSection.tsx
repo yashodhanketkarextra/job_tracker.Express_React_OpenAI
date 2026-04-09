@@ -1,14 +1,13 @@
 import { useState } from "react";
 
+import { parseJD } from "@/api/ai";
 import { type IAiParseResponse } from "@/types/ai";
 
-import { parseJD } from "./useAI";
-
-interface Props {
+interface AISectionProps {
   onFill: (data: IAiParseResponse) => void;
 }
 
-export const AISection = ({ onFill }: Props) => {
+export const AISection = ({ onFill }: AISectionProps) => {
   const [jd, setJd] = useState("");
   const [loading, setLoading] = useState(false);
 

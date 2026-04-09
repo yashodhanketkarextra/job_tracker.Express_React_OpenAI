@@ -1,13 +1,13 @@
 import { useState } from "react";
 
-import { generateResume } from "./useAI";
+import { generateResume } from "@/api/ai";
 
-interface Props {
+interface ResumeSuggestionsProps {
   role: string;
   skills: string[];
 }
 
-export const ResumeSuggestions = ({ role, skills }: Props) => {
+export const ResumeSuggestions = ({ role, skills }: ResumeSuggestionsProps) => {
   const [bullets, setBullets] = useState<string[]>([]);
 
   const handleGenerate = async () => {
