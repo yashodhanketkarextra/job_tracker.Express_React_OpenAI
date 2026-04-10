@@ -3,9 +3,13 @@
 dev:
 	@npm run dev
 
+demo:
+	@npm run dev:prod
+
+
 prod:
-	@npm run build
-	@npm preview
+	@npm run build:prod
+	@npm run preview
 
 help:
 	@echo "Usage: make [dev|prod]"
